@@ -687,6 +687,27 @@ document.addEventListener('visibilitychange',()=>{
 async function reqWL(){try{if(!wl&&'wakeLock'in navigator)wl=await navigator.wakeLock.request('screen');}catch(e){}}
 function relWL(){try{if(wl){wl.release();wl=null;}}catch(e){}}
 function speak(text,cb){const done=()=>{try{if(cb)cb();}catch(e){}};try{if(window.speechSynthesis){window.speechSynthesis.cancel();if(window.speechSynthesis.paused)window.speechSynthesis.resume();function ds(){const vv=window.speechSynthesis.getVoices();const v=vv.find(x=>/id[-_]ID/i.test(x.lang))||vv.find(x=>/id/i.test(x.lang))||vv[0];const parts=(text.match(/[^.!?]+[.!?]*/g)||[text]).map(s=>s.trim()).filter(Boolean);let i=0;function nx(){if(i>=parts.length){done();return;}const u=new SpeechSynthesisUtterance(parts[i++]);u.lang='id-ID';u.rate=.88;u.pitch=1.15;u.volume=1;if(v)u.voice=v;let to=setTimeout(()=>{window.speechSynthesis.cancel();setTimeout(nx,100);},8000);u.onend=()=>{clearTimeout(to);setTimeout(nx,80);};u.onerror=()=>{clearTimeout(to);setTimeout(nx,80);};window.speechSynthesis.resume();window.speechSynthesis.speak(u);}nx();}const vv=window.speechSynthesis.getVoices();if(vv.length>0)ds();else{let t=0;const w=setInterval(()=>{if(window.speechSynthesis.getVoices().length>0||t++>15){clearInterval(w);ds();}},100);window.speechSynthesis.onvoiceschanged=()=>{clearInterval(w);window.speechSynthesis.onvoiceschanged=null;ds();};setTimeout(()=>{clearInterval(w);ds();},2000);}return;}}catch(e){}done();}
+
+// safeSpeak: otomatis fallback ke callback jika speechSynthesis tidak tersedia (Android WebView)
+function safeSpeak(text,cb){
+  if(typeof _prmOn!=='undefined'&&!_prmOn){if(cb)setTimeout(cb,300);return;}
+  try{
+    if(window.speechSynthesis&&typeof window.speechSynthesis.speak==='function'){
+      let started=false;
+      const u=new SpeechSynthesisUtterance(text);
+      u.lang='id-ID';u.rate=.88;u.pitch=1.15;u.volume=1;
+      u.onstart=()=>{started=true;};
+      u.onend=()=>{if(cb)cb();};
+      u.onerror=()=>{if(cb)cb();};
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(u);
+      // Jika speechSynthesis tidak mulai dalam 2.5 detik -> WebView -> langsung cb
+      setTimeout(()=>{if(!started){window.speechSynthesis.cancel();if(cb)cb();}},2500);
+      return;
+    }
+  }catch(e){}
+  if(cb)setTimeout(cb,300);
+}
 function sendHB(){if(!pn||!NAME)return;pn.publish({channel:LOBBY_CH,message:{type:'heartbeat',from:ME,name:NAME,email:_userEmail,channel:ch||0,mode:mode,ts:Date.now()}}).catch(()=>{});}
 function startHB(){stopHB();sendHB();hbTimer=setInterval(sendHB,mode==='standby'?15000:25000);}
 function stopHB(){if(hbTimer){clearInterval(hbTimer);hbTimer=null;}}
@@ -759,14 +780,10 @@ function pwrOff(){
   setTimeout(()=>{
     beep(523,.5,.6);
     setTimeout(()=>beep(392,.6,.5),480);
+    if(typeof aDing==='function')aDing(); // ← suara ding-dong pramugari power OFF
     setTimeout(()=>{
-      try{
-        window.speechSynthesis.cancel();
-        var u=new SpeechSynthesisUtterance('Terima kasih telah menggunakan layanan H T Julianto. Perangkat akan dimatikan. Sampai jumpa.');
-        u.lang='id-ID';u.rate=.88;u.pitch=1.15;u.volume=1;
-        window.speechSynthesis.speak(u);
-        u.onend=()=>{setTimeout(()=>{D('offOverlay').classList.add('show');D('pwrBtn').classList.remove('on');},300);};
-      }catch(e){setTimeout(()=>{D('offOverlay').classList.add('show');D('pwrBtn').classList.remove('on');},500);}
+      speakAfterDing('Terima kasih telah menggunakan layanan H T Julianto. Perangkat akan dimatikan. Sampai jumpa.',
+        ()=>{setTimeout(()=>{D('offOverlay').classList.add('show');D('pwrBtn').classList.remove('on');},300);});
     },1100);
   },80);
   setTimeout(()=>{if(!isOn){D('offOverlay').classList.add('show');D('pwrBtn').classList.remove('on');}},9000);
@@ -782,13 +799,9 @@ function pwrOn(){
   setTimeout(()=>{
     beep(392,.5,.6);
     setTimeout(()=>beep(523,.6,.5),480);
+    if(typeof aDing==='function')aDing(); // ← suara ding-dong pramugari power ON
     setTimeout(()=>{
-      try{
-        window.speechSynthesis.cancel();
-        var u=new SpeechSynthesisUtterance('Selamat datang di H T Julianto. Perangkat komunikasi Anda kini aktif. Silakan pilih channel untuk memulai. Terima kasih.');
-        u.lang='id-ID';u.rate=.88;u.pitch=1.15;u.volume=1;
-        window.speechSynthesis.speak(u);
-      }catch(e){}
+      speakAfterDing('Selamat datang di H T Julianto. Perangkat komunikasi Anda kini aktif. Silakan pilih channel untuk memulai. Terima kasih.',null);
     },1100);
   },80);
   if(pnReady)startHB();
@@ -1351,30 +1364,43 @@ const _dingURI=(function(){
     return 'data:audio/wav;base64,'+b64;
   }catch(e){return null;}
 })();
-// ══ SUARA PRAMUGARI — TOGGLE ON/OFF ══
-let _prmOn = true;
-try { _prmOn = localStorage.getItem('ht_prm_sound') !== 'off'; } catch(e) {}
-function prmToggleChange() {
-  const chk = document.getElementById('prmChk');
-  _prmOn = chk ? chk.checked : true;
-  try { localStorage.setItem('ht_prm_sound', _prmOn ? 'on' : 'off'); } catch(e) {}
-}
-// Terapkan state tersimpan saat halaman dimuat
-(function(){
-  const chk = document.getElementById('prmChk');
-  if (chk) chk.checked = _prmOn;
-})();
+// Suara pramugari selalu aktif
+const _prmOn = true;
 
 function aDing(){
-  if(!_prmOn) return;   // ← cek toggle
-  if(!_dingURI)return;
+  if(!_prmOn) return;
+  // Pakai AudioContext oscillator — bekerja di Android WebView & browser
   try{
-    const a=new Audio(_dingURI);
-    a.volume=0.85;
-    a.play().catch(()=>{});
+    const ctx=window.actx||(new(window.AudioContext||window.webkitAudioContext)());
+    if(ctx.state==='suspended')ctx.resume();
+    function dTone(f,t,d,v){
+      const o=ctx.createOscillator(),g=ctx.createGain();
+      o.type='sine';o.connect(g);g.connect(ctx.destination);
+      o.frequency.value=f;
+      g.gain.setValueAtTime(v,ctx.currentTime+t);
+      g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+t+d);
+      o.start(ctx.currentTime+t);o.stop(ctx.currentTime+t+d+0.05);
+    }
+    dTone(523.25,0,0.55,0.5);   // ding — C5
+    dTone(659.25,0,0.55,0.15);  // harmonis E5
+    dTone(392,0.55,0.75,0.4);   // dong — G4
+    dTone(523.25,0.55,0.75,0.1);
   }catch(e){}
+  // Fallback: coba new Audio juga (browser desktop)
+  if(_dingURI){try{const a=new Audio(_dingURI);a.volume=0.7;a.play().catch(()=>{});}catch(e){}}
 }
 window.aDing = aDing;
+
+// === FIX APK: alias playDingDong → aDing (APK injection memanggil window.playDingDong()) ===
+window.playDingDong = aDing;
+
+// === FIX APK: definisikan speakAfterDing agar guard injection APK tidak skip ===
+// Di browser → pakai safeSpeak (ada timeout fallback 2.5s)
+// Di APK    → APK override ini pakai Android.speak() + playDingDong()
+window.speakAfterDing = function(text, doneCb) {
+  dbg('speakAfterDing called, AndroidTTS=' + (window._usingAndroidTTS||false));
+  safeSpeak(text, doneCb);
+};
 
 // Helper tombol admin — reliable di Android WebView (data-* + ontouchend+onclick)
 window.aBtnTouch=function(e){
