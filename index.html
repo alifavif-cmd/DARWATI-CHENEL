@@ -6,8 +6,8 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="HT Julianto">
-<title>HT JULIANTO</title>
+<meta name="apple-mobile-web-app-title" content="Darwati Chenel">
+<title>DARWATI CHENEL</title>
 
 <script>
 window._pnSDKReady=false;window._pnSDKFailed=false;window._pnLoading=false;
@@ -381,7 +381,7 @@ body{background:#0d0d0d;min-height:100vh;display:flex;flex-direction:column;alig
 <!-- ════ REGISTER ════ -->
 <div id="regScreen">
   <div class="reg-logo">📡</div>
-  <div class="reg-title">HT JULIANTO</div>
+  <div class="reg-title">DARWATI CHENEL</div>
   <div class="reg-sub">KOMUNIKASI DIGITAL</div>
   <div class="reg-box">
     <div class="reg-label">NAMA PANGGILAN</div>
@@ -401,7 +401,7 @@ body{background:#0d0d0d;min-height:100vh;display:flex;flex-direction:column;alig
 
 <!-- ════ OFF OVERLAY ════ -->
 <div id="offOverlay">
-  <div class="off-logo">📡 HT JULIANTO</div>
+  <div class="off-logo">📡 DARWATI CHENEL</div>
   <div class="off-pwrbtn" onclick="pwrOn()">
     <svg viewBox="0 0 24 24"><path d="M12 2v6M6.34 6.34A9 9 0 1 0 17.66 6.34"/></svg>
   </div>
@@ -411,7 +411,7 @@ body{background:#0d0d0d;min-height:100vh;display:flex;flex-direction:column;alig
 <!-- ════ MAIN UI ════ -->
 <div class="hdr">
   <div class="hdr-left">
-    <h1>📡 HT JULIANTO</h1>
+    <h1>📡 DARWATI CHENEL</h1>
     <div class="hdr-name" id="hdrName">KOMUNIKASI DIGITAL</div>
   </div>
   <div class="hdr-right">
@@ -489,7 +489,7 @@ body{background:#0d0d0d;min-height:100vh;display:flex;flex-direction:column;alig
   <div id="admLogin">
     <div style="font-size:40px">🛡️</div>
     <div class="adm-login-title">ADMIN PANEL</div>
-    <div class="adm-login-sub">HT JULIANTO · KONTROL PENUH</div>
+    <div class="adm-login-sub">DARWATI CHENEL · KONTROL PENUH</div>
     <div class="adm-login-box">
       <div class="adm-login-label">KODE ADMIN (6 DIGIT)</div>
       <input class="adm-pw-input" id="admPwInput" type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="6"
@@ -600,7 +600,7 @@ body{background:#0d0d0d;min-height:100vh;display:flex;flex-direction:column;alig
 ══════════════════════════════════════ -->
 <script>
 'use strict';
-const GID='JULIANTO2024',PP='demo',PS='demo',ADMIN_SECRET='JULIADMIN99';
+const GID='DARWATI2024',PP='demo',PS='demo',ADMIN_SECRET='DARWATIADMIN99';
 const LOBBY_CH='ht_'+GID+'_lobby',CMD_CH='ht_'+GID+'_cmd_'+ADMIN_SECRET;
 const ICE_SERVERS=[
   {urls:'stun:stun.l.google.com:19302'},
@@ -661,14 +661,7 @@ let _dbg=[];
 function dbg(t){const ts=new Date().toLocaleTimeString('id',{hour:'2-digit',minute:'2-digit',second:'2-digit'});_dbg.push('['+ts+'] '+t);if(_dbg.length>8)_dbg.shift();const el=D('dbgPanel');if(el)el.textContent=_dbg.join('\n');}
 (function(){if(localStorage.getItem('ht_banned_'+GID)==='1'){D('regScreen').classList.add('hide');D('blockedScreen').classList.add('show');}})();
 D('regName').addEventListener('keydown',e=>{if(e.key==='Enter')doRegister(e);});
-function doRegister(e){if(e&&e.cancelable)e.preventDefault();const v=D('regName').value.trim().toUpperCase();if(!v||v.length<2){D('regErr').textContent='Nama minimal 2 karakter';return;}if(!/^[A-Z0-9 _\-]+$/.test(v)){D('regErr').textContent='Gunakan huruf/angka saja';return;}const em=(D('regEmail').value||'').trim().toLowerCase();if(!em||!em.includes('@')||!em.includes('.')){D('regErr').textContent='Email tidak valid (contoh: nama@gmail.com)';return;}NAME=v;_userEmail=em;try{localStorage.setItem(_ID_KEY,JSON.stringify({uid:ME,name:NAME,email:em}));}catch(err){}D('hdrName').textContent='👤 '+NAME;D('regScreen').classList.add('hide');
-  // 🔔 Ding dong → suara pramugari → baru startSystem
-  ensureActx();
-  beep(523,.5,.6);
-  setTimeout(()=>beep(392,.6,.5),480);
-  setTimeout(()=>speak('Selamat datang di jaringan H T Julianto. Halo '+NAME+'. Silakan pilih channel untuk memulai komunikasi. Terima kasih.',()=>startSystem()),1100);
-  setTimeout(()=>startSystem(),8000); // fallback kalau speak tidak jalan
-}
+function doRegister(e){if(e&&e.cancelable)e.preventDefault();const v=D('regName').value.trim().toUpperCase();if(!v||v.length<2){D('regErr').textContent='Nama minimal 2 karakter';return;}if(!/^[A-Z0-9 _\-]+$/.test(v)){D('regErr').textContent='Gunakan huruf/angka saja';return;}const em=(D('regEmail').value||'').trim().toLowerCase();if(!em||!em.includes('@')||!em.includes('.')){D('regErr').textContent='Email tidak valid (contoh: nama@gmail.com)';return;}NAME=v;_userEmail=em;try{localStorage.setItem(_ID_KEY,JSON.stringify({uid:ME,name:NAME,email:em}));}catch(err){}D('hdrName').textContent='👤 '+NAME;D('regScreen').classList.add('hide');startSystem();}
 function startSystem(){setSt('Minta izin mikrofon...','info');showNetBanner(true,'MEMUAT SDK JARINGAN...');navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true},video:false}).then(s=>{mic=s;mic.getAudioTracks().forEach(t=>t.enabled=false);dbg('MIC OK');setSt('Mikrofon OK · Memuat jaringan...','ok');initOrWaitPN();}).catch(e=>{dbg('MIC GAGAL: '+e.name);setSt('⚠ MIC DITOLAK · Hanya bisa mendengar','err');D('micBanner').classList.add('show');initOrWaitPN();});}
 function ensureActx(){if(actx){if(actx.state==='suspended')actx.resume();return actx;}try{actx=new(window.AudioContext||window.webkitAudioContext)();const b=actx.createBuffer(1,actx.sampleRate,actx.sampleRate),s=actx.createBufferSource();s.buffer=b;s.loop=true;s.connect(actx.destination);s.start();return actx;}catch(e){return null;}}
 function beep(f,d,v){try{if(!actx)return;if(actx.state==='suspended')actx.resume();const o=actx.createOscillator(),g=actx.createGain();o.connect(g);g.connect(actx.destination);o.frequency.value=f;g.gain.setValueAtTime(v,actx.currentTime);g.gain.exponentialRampToValueAtTime(.001,actx.currentTime+d);o.start();o.stop(actx.currentTime+d);}catch(e){}}
@@ -789,7 +782,7 @@ function pwrOff(){
     setTimeout(()=>beep(392,.6,.5),480);
     if(typeof aDing==='function')aDing(); // ← suara ding-dong pramugari power OFF
     setTimeout(()=>{
-      speakAfterDing('Terima kasih telah menggunakan layanan H T Julianto. Perangkat akan dimatikan. Sampai jumpa.',
+      speakAfterDing('Terima kasih telah menggunakan layanan Darwati Chenel. Perangkat akan dimatikan. Sampai jumpa.',
         ()=>{setTimeout(()=>{D('offOverlay').classList.add('show');D('pwrBtn').classList.remove('on');},300);});
     },1100);
   },80);
@@ -808,7 +801,7 @@ function pwrOn(){
     setTimeout(()=>beep(523,.6,.5),480);
     if(typeof aDing==='function')aDing(); // ← suara ding-dong pramugari power ON
     setTimeout(()=>{
-      speakAfterDing('Selamat datang di H T Julianto. Perangkat komunikasi Anda kini aktif. Silakan pilih channel untuk memulai. Terima kasih.',null);
+      speakAfterDing('Selamat datang di Darwati Chenel. Perangkat komunikasi Anda kini aktif. Silakan pilih channel untuk memulai. Terima kasih.',null);
     },1100);
   },80);
   if(pnReady)startHB();
@@ -990,7 +983,7 @@ window.addEventListener('beforeunload',()=>{stopHB();sendBye();});
 <script>
 (function(){
 'use strict';
-const A_GID='JULIANTO2024',A_PP='demo',A_PS='demo',A_SECRET='JULIADMIN99';
+const A_GID='DARWATI2024',A_PP='demo',A_PS='demo',A_SECRET='DARWATIADMIN99';
 const A_PASS='240306'; // ← KODE ADMIN PERMANEN
 const A_AUTH_KEY='ht_admin_auth_'+A_GID; // key localStorage admin
 const A_LOBBY='ht_'+A_GID+'_lobby',A_CMD='ht_'+A_GID+'_cmd_'+A_SECRET;
@@ -1073,7 +1066,7 @@ window.adm_login=function(){
   // Admin login → langsung approved, hilangkan waitScreen
   if(typeof _isApproved!=='undefined'){
     _isApproved=true;
-    try{localStorage.setItem(typeof SELF_APPR_KEY!=='undefined'?SELF_APPR_KEY:('ht_approved_JULIANTO2024'),'1');}catch(e){}
+    try{localStorage.setItem(typeof SELF_APPR_KEY!=='undefined'?SELF_APPR_KEY:('ht_approved_DARWATI2024'),'1');}catch(e){}
     try{sessionStorage.setItem(typeof SESSION_KEY!=='undefined'?SESSION_KEY:('ht_sess_adm'),'1');}catch(e){}
   }
   if(typeof _thisIsAdmin!=='undefined')_thisIsAdmin=true;
