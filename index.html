@@ -183,6 +183,17 @@ body{background:#0d0d0d;min-height:100vh;display:flex;flex-direction:column;alig
 .mbtn.as{background:#120e00;border-color:#806000;color:#ffcc00;}
 #stbyNotice{width:100%;max-width:340px;background:#120e00;border:1px solid #281e00;border-radius:8px;padding:7px 12px;display:none;align-items:center;gap:8px;margin-bottom:12px;font-size:9px;color:#806000;letter-spacing:2px;}
 #stbyNotice.show{display:flex;}
+
+/* ════ SUARA PRAMUGARI TOGGLE ════ */
+#prmBar{width:100%;max-width:340px;background:#0a0e0a;border:1px solid #1a2e1a;border-radius:8px;padding:8px 12px;display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.prm-lbl{font-size:9px;color:#3a6a3a;letter-spacing:2px;display:flex;align-items:center;gap:6px;}
+.prm-lbl span{font-size:14px;}
+#prmToggle{position:relative;width:46px;height:24px;cursor:pointer;touch-action:manipulation;-webkit-user-select:none;user-select:none;flex-shrink:0;}
+#prmToggle input{opacity:0;width:0;height:0;position:absolute;}
+.prm-knob{position:absolute;inset:0;border-radius:12px;background:#1a0a0a;border:1px solid #3a1a1a;transition:all .3s;}
+.prm-dot{position:absolute;top:4px;left:4px;width:14px;height:14px;border-radius:50%;background:#552222;transition:all .3s;}
+#prmToggle input:checked ~ .prm-knob{background:#071e00;border-color:#3a7800;}
+#prmToggle input:checked ~ .prm-dot{left:26px;background:#aed000;box-shadow:0 0 6px rgba(174,208,0,.5);}
 .sdot{width:7px;height:7px;border-radius:50%;background:#bb8800;flex-shrink:0;animation:sp 1.5s infinite;}
 @keyframes sp{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.6)}}
 .chlbl{width:100%;max-width:340px;font-size:9px;color:#282828;letter-spacing:3px;text-align:center;margin-bottom:8px;}
@@ -312,12 +323,12 @@ body{background:#0d0d0d;min-height:100vh;display:flex;flex-direction:column;alig
 .a-empty{text-align:center;color:#4a7a4a;font-size:11px;letter-spacing:2px;padding:24px;background:#071a07;border:2px solid #1a3a1a;border-radius:10px;}
 
 /* TOAST */
-#admToast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);background:#0a1a00;border:2px solid #3a7800;border-radius:10px;color:#aed000;font-size:11px;font-family:'Courier New',monospace;letter-spacing:2px;padding:10px 20px;z-index:3000;transition:transform .3s;white-space:nowrap;}
+#admToast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);background:#0a1a00;border:2px solid #3a7800;border-radius:10px;color:#aed000;font-size:11px;font-family:'Courier New',monospace;letter-spacing:2px;padding:10px 20px;z-index:3001;transition:transform .3s;white-space:nowrap;}
 #admToast.show{transform:translateX(-50%) translateY(0);}
 #admToast.err{background:#1a0000;border-color:#660000;color:#ff4444;}
 
 /* DIALOG */
-#admDlg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:3000;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:20px;}
+#admDlg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:3001;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:20px;}
 #admDlg.show{display:flex;}
 .a-dlg-box{background:#0a0f0a;border:2px solid #1a3010;border-radius:14px;padding:20px;max-width:320px;width:100%;display:flex;flex-direction:column;gap:14px;}
 .a-dlg-title{font-size:13px;color:#ff6b00;letter-spacing:3px;font-weight:bold;text-align:center;}
@@ -496,7 +507,7 @@ body{background:#0d0d0d;min-height:100vh;display:flex;flex-direction:column;alig
       <div class="adm-hdr-right">
         <div class="adm-pn-st off" id="admPnSt">OFFLINE</div>
         <div class="adm-radio-btn" onclick="adm_close()">📡 RADIO</div>
-        <div onclick="adm_toggleApp()" title="ON/OFF Aplikasi" style="display:flex;align-items:center;gap:4px;cursor:pointer;touch-action:manipulation;padding:3px 7px;border-radius:5px;border:1px solid #1a3010;background:#050f05;">
+        <div ontouchend="event.preventDefault();adm_toggleApp()" onclick="adm_toggleApp()" title="ON/OFF Aplikasi" style="display:flex;align-items:center;gap:4px;cursor:pointer;touch-action:manipulation;padding:3px 7px;border-radius:5px;border:1px solid #1a3010;background:#050f05;">
           <div id="aAppSwKnob" style="width:26px;height:14px;border-radius:7px;background:#1a5c00;border:1px solid #3a7800;display:flex;align-items:center;padding:1px;transition:all .3s;"><div id="aAppSwDot" style="width:10px;height:10px;border-radius:50%;background:#aed000;margin-left:auto;transition:margin .3s;"></div></div>
           <span id="aAppSwLabel" style="font-size:8px;color:#3a7800;letter-spacing:1px;font-family:'Courier New',monospace;font-weight:bold;">ON</span>
         </div>
@@ -532,8 +543,8 @@ body{background:#0d0d0d;min-height:100vh;display:flex;flex-direction:column;alig
           <input class="a-bc-in" id="aBcMsg" type="text" maxlength="80"
             placeholder="Ketik pesan untuk semua pengguna..." autocomplete="off">
           <div class="a-bc-btns">
-            <button class="a-bc-btn" onclick="adm_broadcast()">📣 UMUMKAN</button>
-            <button class="a-bc-btn warn" onclick="adm_kickAll()">⚡ PUTUS SEMUA</button>
+            <button class="a-bc-btn" ontouchend="event.preventDefault();adm_broadcast()" onclick="adm_broadcast()">📣 UMUMKAN</button>
+            <button class="a-bc-btn warn" ontouchend="event.preventDefault();adm_kickAll()" onclick="adm_kickAll()">⚡ PUTUS SEMUA</button>
           </div>
         </div>
       </div>
@@ -549,10 +560,10 @@ body{background:#0d0d0d;min-height:100vh;display:flex;flex-direction:column;alig
         <div style="display:flex;align-items:center;margin-bottom:10px;gap:8px;">
           <div class="a-sec" style="margin:0">👥 PENGGUNA ONLINE</div>
           <div style="margin-left:auto;display:flex;gap:6px;">
-            <button id="aFAll" onclick="adm_filter('all')"
-              style="font-size:8px;padding:4px 10px;background:#071e00;border:1px solid #2a5200;border-radius:5px;color:#88cc44;font-family:'Courier New',monospace;cursor:pointer;">SEMUA</button>
-            <button id="aFCh" onclick="adm_filter('ch')"
-              style="font-size:8px;padding:4px 10px;background:#0a0a0a;border:1px solid #222;border-radius:5px;color:#444;font-family:'Courier New',monospace;cursor:pointer;">DI CH</button>
+            <button id="aFAll" ontouchend="event.preventDefault();adm_filter('all')" onclick="adm_filter('all')"
+              style="font-size:8px;padding:4px 10px;background:#071e00;border:1px solid #2a5200;border-radius:5px;color:#88cc44;font-family:'Courier New',monospace;cursor:pointer;touch-action:manipulation;">SEMUA</button>
+            <button id="aFCh" ontouchend="event.preventDefault();adm_filter('ch')" onclick="adm_filter('ch')"
+              style="font-size:8px;padding:4px 10px;background:#0a0a0a;border:1px solid #222;border-radius:5px;color:#444;font-family:'Courier New',monospace;cursor:pointer;touch-action:manipulation;">DI CH</button>
           </div>
         </div>
         <div class="a-ulist" id="aUserList"><div class="a-empty">Menunggu pengguna bergabung...</div></div>
@@ -566,21 +577,23 @@ body{background:#0d0d0d;min-height:100vh;display:flex;flex-direction:column;alig
 
     </div>
   </div>
-</div>
 
-<!-- TOAST & DIALOG -->
-<div id="admToast"></div>
-<div id="admDlg">
-  <div class="a-dlg-box">
-    <div class="a-dlg-title" id="aDlgTitle">KONFIRMASI</div>
-    <div class="a-dlg-msg" id="aDlgMsg">Yakin?</div>
-    <input class="a-dlg-reason" id="aDlgReason" type="text" maxlength="60" placeholder="Alasan (opsional)..." autocomplete="off">
-    <div class="a-dlg-btns">
-      <button class="a-dlg-btn a-dlg-cancel" onclick="adm_closeDlg()">BATAL</button>
-      <button class="a-dlg-btn a-dlg-ok" id="aDlgOk" onclick="adm_confirmDlg()">YA</button>
+  <!-- TOAST & DIALOG — di dalam admOverlay agar z-index benar di Android WebView -->
+  <div id="admToast"></div>
+  <div id="admDlg">
+    <div class="a-dlg-box">
+      <div class="a-dlg-title" id="aDlgTitle">KONFIRMASI</div>
+      <div class="a-dlg-msg" id="aDlgMsg">Yakin?</div>
+      <input class="a-dlg-reason" id="aDlgReason" type="text" maxlength="60" placeholder="Alasan (opsional)..." autocomplete="off">
+      <div class="a-dlg-btns">
+        <button class="a-dlg-btn a-dlg-cancel" ontouchend="event.preventDefault();adm_closeDlg()" onclick="adm_closeDlg()">BATAL</button>
+        <button class="a-dlg-btn a-dlg-ok" id="aDlgOk" ontouchend="event.preventDefault();adm_confirmDlg()" onclick="adm_confirmDlg()">YA</button>
+      </div>
     </div>
   </div>
 </div>
+
+
 
 <!-- ══════════════════════════════════════
      MAIN APP SCRIPT
@@ -734,8 +747,53 @@ function handleAdminCmd(m){if(!m)return;const isMe=(m.target===ME)||(m.targetNam
 function showAnnounce(msg){const el=document.createElement('div');el.style.cssText='position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#0a1a00;border:2px solid #3a7800;border-radius:10px;color:#aed000;font-size:12px;font-family:Courier New,monospace;letter-spacing:2px;padding:12px 20px;z-index:3000;max-width:90%;text-align:center;word-break:break-word;';el.textContent='📣 '+msg;document.body.appendChild(el);setTimeout(()=>el.remove(),6000);}
 function doKick(r){stopHB();sendBye();if(isTX)pttOFF(null);if(mic)mic.getAudioTracks().forEach(t=>t.enabled=false);Object.keys(peers).forEach(killPeer);if(pn){try{pn.unsubscribeAll();}catch(e){}}relWL();D('kickMsg').textContent=r?'Anda diputus: '+r:'Anda telah diputus dari jaringan oleh Administrator.';D('kickOverlay').classList.add('show');dbg('KICKED');}
 function doBan(r){localStorage.setItem('ht_banned_'+GID,'1');stopHB();sendBye();if(isTX)pttOFF(null);if(mic)mic.getAudioTracks().forEach(t=>t.enabled=false);Object.keys(peers).forEach(killPeer);if(pn){try{pn.unsubscribeAll();}catch(e){}}relWL();D('kickOverlay').classList.remove('show');D('blockedScreen').classList.add('show');dbg('BANNED');}
-function pwrOff(){if(!isOn)return;ensureActx();isOn=false;stopHB();sendBye();if(isTX)pttOFF(null);if(mic)mic.getAudioTracks().forEach(t=>t.enabled=false);if(ch){try{pub({type:'bye',from:ME});}catch(e){}Object.keys(peers).forEach(killPeer);peers={};try{pn.unsubscribeAll();}catch(e){}}relWL();setLCD('-','MATIKAN...','info');setSt('Sampai jumpa...','info');speak('Terima kasih telah menggunakan layanan H T Julianto. Perangkat akan dimatikan. Sampai jumpa.',()=>{beep(440,.15,.18);setTimeout(()=>beep(330,.2,.18),160);setTimeout(()=>{D('offOverlay').classList.add('show');D('pwrBtn').classList.remove('on');},380);});setTimeout(()=>{if(!isOn){D('offOverlay').classList.add('show');D('pwrBtn').classList.remove('on');}},6000);}
-function pwrOn(){if(isOn)return;ensureActx();isOn=true;D('offOverlay').classList.remove('show');D('pwrBtn').classList.add('on');if(actx&&actx.state==='suspended')actx.resume();reqWL();setLCD('-','MENYALA...','info');setSt('Menyalakan perangkat...','info');beep(660,.08,.14);setTimeout(()=>beep(880,.08,.14),130);setTimeout(()=>beep(1100,.12,.14),260);speak('Selamat datang di H T Julianto. Perangkat komunikasi Anda kini aktif. Silakan pilih channel untuk memulai. Terima kasih.');if(pnReady)startHB();setTimeout(()=>{if(ch&&pn){setLCD(ch,'SIAP','ok');setTimeout(bHello,300);}else setLCD('-','PILIH CHANNEL','info');setSt(ch?'Channel '+ch+' · '+NAME:(pnReady?'Pilih channel 1–9':'Menunggu jaringan...'),'ok');},300);}
+function pwrOff(){
+  if(!isOn)return;
+  ensureActx();
+  isOn=false;stopHB();sendBye();
+  if(isTX)pttOFF(null);
+  if(mic)mic.getAudioTracks().forEach(t=>t.enabled=false);
+  if(ch){try{pub({type:'bye',from:ME});}catch(e){}Object.keys(peers).forEach(killPeer);peers={};try{pn.unsubscribeAll();}catch(e){}}
+  relWL();setLCD('-','MATIKAN...','info');setSt('Sampai jumpa...','info');
+  // 🔔 Ding dong dulu → baru suara pramugari
+  setTimeout(()=>{
+    beep(523,.5,.6);
+    setTimeout(()=>beep(392,.6,.5),480);
+    setTimeout(()=>{
+      try{
+        window.speechSynthesis.cancel();
+        var u=new SpeechSynthesisUtterance('Terima kasih telah menggunakan layanan H T Julianto. Perangkat akan dimatikan. Sampai jumpa.');
+        u.lang='id-ID';u.rate=.88;u.pitch=1.15;u.volume=1;
+        window.speechSynthesis.speak(u);
+        u.onend=()=>{setTimeout(()=>{D('offOverlay').classList.add('show');D('pwrBtn').classList.remove('on');},300);};
+      }catch(e){setTimeout(()=>{D('offOverlay').classList.add('show');D('pwrBtn').classList.remove('on');},500);}
+    },1100);
+  },80);
+  setTimeout(()=>{if(!isOn){D('offOverlay').classList.add('show');D('pwrBtn').classList.remove('on');}},9000);
+}
+function pwrOn(){
+  if(isOn)return;
+  ensureActx();
+  isOn=true;
+  D('offOverlay').classList.remove('show');D('pwrBtn').classList.add('on');
+  if(actx&&actx.state==='suspended')actx.resume();
+  reqWL();setLCD('-','MENYALA...','info');setSt('Menyalakan perangkat...','info');
+  // 🔔 Ding dong dulu → baru suara pramugari
+  setTimeout(()=>{
+    beep(392,.5,.6);
+    setTimeout(()=>beep(523,.6,.5),480);
+    setTimeout(()=>{
+      try{
+        window.speechSynthesis.cancel();
+        var u=new SpeechSynthesisUtterance('Selamat datang di H T Julianto. Perangkat komunikasi Anda kini aktif. Silakan pilih channel untuk memulai. Terima kasih.');
+        u.lang='id-ID';u.rate=.88;u.pitch=1.15;u.volume=1;
+        window.speechSynthesis.speak(u);
+      }catch(e){}
+    },1100);
+  },80);
+  if(pnReady)startHB();
+  setTimeout(()=>{if(ch&&pn){setLCD(ch,'SIAP','ok');setTimeout(bHello,300);}else setLCD('-','PILIH CHANNEL','info');setSt(ch?'Channel '+ch+' · '+NAME:(pnReady?'Pilih channel 1–9':'Menunggu jaringan...'),'ok');},300);
+}
 function doMode(m){if(!isOn)return;ensureActx();mode=m;const N=D('btnN'),S=D('btnS'),sn=D('stbyNotice'),pb=D('pttBtn'),ph=D('pttHint'),bg=D('badge');if(m==='standby'){N.classList.remove('an');S.classList.add('as');sn.classList.add('show');pb.classList.add('dis');ph.textContent='STANDBY · HANYA DENGAR · TEKAN NORMAL UNTUK BICARA';bg.textContent='STANDBY';bg.className='stby';if(isTX)pttOFF(null);if(mic)mic.getAudioTracks().forEach(t=>t.enabled=false);reqWL();startKeepAlive();if(ch)setLCD(ch,'MONITOR','info');setSt('STANDBY · Monitor aktif · Layar tetap hidup','info');beep(550,.1,.12);}else{S.classList.remove('as');N.classList.add('an');sn.classList.remove('show');pb.classList.remove('dis');ph.textContent='TAHAN TOMBOL UNTUK BICARA · LEPAS = SELESAI';bg.textContent='NORMAL';bg.className='';reqWL();stopKeepAlive();if(ch)setLCD(ch,'SIAP','ok');setSt('Channel '+(ch||'-')+' · '+NAME,'ok');beep(660,.08,.12);}}
 function doCh(n){if(!isOn)return;if(!_isApproved){setSt('⛔ Tunggu persetujuan admin!','err');return;}ensureActx();if(!pn){setSt(window._pnSDKFailed?'GAGAL JARINGAN · Refresh':'Jaringan loading · Tunggu...','err');return;}if(n===ch)return;if(ch){try{pub({type:'bye',from:ME});}catch(e){}Object.keys(peers).forEach(killPeer);peers={};try{pn.unsubscribeAll();}catch(e){}}document.querySelectorAll('.cbtn').forEach((b,i)=>b.classList.toggle('act',i+1===n));ch=n;updPeers();setLCD(n,'BERGABUNG...','info');setSt('Bergabung ke Channel '+n+'...','info');pn.subscribe({channels:[room(),LOBBY_CH,CMD_CH]});setTimeout(()=>{bHello();sendHB();setLCD(n,mode==='standby'?'MONITOR':'SIAP',mode==='standby'?'info':'ok');setSt((mode==='standby'?'STANDBY · Monitor':'Channel')+' '+n+' · '+NAME,'ok');},600);}
 function room(){return 'ht_'+GID+'_ch'+ch;}
@@ -948,8 +1006,22 @@ let _isSavedAdmin=aCheckAdminAuth();
 const A_APPR_KEY='ht_admin_approved_'+A_GID;
 let aPN=null,aUsers={},aBans=[],aPending={},aApproved=[],aFilter='all',aStale=null,aDlgCb=null,aToastT=null,aLoggedIn=_isSavedAdmin;
 
+// ══ AUDIO CTX ADMIN (persistent — di-unlock saat panel dibuka) ══
+let aActx=null;
+function ensureAActx(){
+  if(aActx&&aActx.state!=='closed')return aActx;
+  try{aActx=new(window.AudioContext||window.webkitAudioContext)();}catch(e){aActx=null;}
+  return aActx;
+}
+function unlockAActx(){
+  // Dipanggil dari user gesture murni (tap tombol admin) → resume AudioContext
+  const ctx=ensureAActx();
+  if(ctx&&ctx.state==='suspended')ctx.resume().catch(()=>{});
+}
+
 // ══ OPEN / CLOSE ══
 window.adm_open=function(){
+  unlockAActx(); // Unlock AudioContext saat tap tombol admin (user gesture murni)
   if(!aLoggedIn)aLoggedIn=aCheckAdminAuth();
   $('admOverlay').classList.add('show');
   $('admBtn').classList.add('adm-on');
@@ -1167,8 +1239,8 @@ window.adm_kickAll=function(){aOpenDlg('⚡ PUTUS SEMUA','Semua pengguna online 
 function aUpdateUI(){aUpdateStats();aRenderCh();aRenderUsers();aRenderPending();aRenderApproved();}
 function aUpdateStats(){const arr=Object.values(aUsers);$('aSOnline').textContent=arr.length;$('aSPending').textContent=Object.keys(aPending).length;$('aSBanned').textContent=aBans.length;$('aBanCnt').textContent=aBans.length;$('aApvCnt').textContent=aApproved.length;}
 function aRenderCh(){const c={};for(let i=1;i<=9;i++)c[i]=0;Object.values(aUsers).forEach(u=>{if(u.channel>=1&&u.channel<=9)c[u.channel]++;});$('aChGrid').innerHTML=Array.from({length:9},(_,i)=>i+1).map(n=>`<div class="a-ch ${c[n]>0?'act':''}"><div class="a-ch-n">${n}</div><div class="a-ch-c">${c[n]>0?c[n]+' user':'kosong'}</div></div>`).join('');}
-function aRenderUsers(){let filtered=Object.entries(aUsers);if(aFilter==='ch')filtered=filtered.filter(([,u])=>u.channel>0);if(!filtered.length){$('aUserList').innerHTML='<div class="a-empty">Tidak ada pengguna online</div>';return;}filtered.sort(([,a],[,b])=>(b.channel-a.channel)||(a.name.localeCompare(b.name)));$('aUserList').innerHTML=filtered.map(([pid,u])=>{const since=Math.round((Date.now()-u.lastSeen)/1000)+'s lalu';const chInfo=u.channel>0?'📡 CH '+u.channel+' · '+u.mode.toUpperCase():'⏳ Belum pilih channel';const emailRow=u.email?`<div class="a-uemail">✉ ${aEsc(u.email)}</div>`:'';const muteBtn=u.muted?`<button class="a-ubtn a-uon" onclick="adm_unmute('${pid}','${aEsc(u.name)}')">🔊 ON</button>`:`<button class="a-ubtn a-uoff" onclick="adm_mute('${pid}','${aEsc(u.name)}')">🔇 OFF</button>`;const muteBar=u.muted?'<div style="font-size:9px;color:#ff4444;letter-spacing:1px;margin-top:2px;">🔇 MIKROFON DIKUNCI</div>':'';return`<div class="a-ucard${u.muted?' a-ucard-muted':''}"><div class="a-uav" style="${u.muted?'border-color:#663333;color:#cc4444;':''}">${u.name.charAt(0)}</div><div class="a-uinfo"><div class="a-uname">${aEsc(u.name)}</div><div class="a-umeta">${chInfo}</div>${emailRow}${muteBar}<div class="a-uid">ID: ${pid} · ${since}</div></div><div class="a-uact">${muteBtn}<button class="a-ubtn a-ukick" onclick="adm_promptKick('${pid}','${aEsc(u.name)}')">⚡ KICK</button><button class="a-ubtn a-uban" onclick="adm_promptBan('${pid}','${aEsc(u.name)}')">🚫 BAN</button></div></div>`;}).join('');}
-function aRenderPending(){const entries=Object.values(aPending);$('aPendingList').innerHTML=entries.length?entries.map(u=>`<div class="a-pendcard"><div class="a-pend-av">${u.name.charAt(0)}</div><div class="a-pend-info"><div class="a-pend-name">${aEsc(u.name)}</div><div class="a-pend-email">✉ ${aEsc(u.email)}</div><div class="a-pend-id">ID: ${u.pid}</div></div><div class="a-pend-act"><button class="a-acc-btn" onclick="adm_approve('${u.pid}')">✅ ACC</button><button class="a-tolak-btn" onclick="adm_reject('${u.pid}')">❌ TOLAK</button></div></div>`).join(''):'<div class="a-empty">Tidak ada permintaan masuk</div>';}
+function aRenderUsers(){let filtered=Object.entries(aUsers);if(aFilter==='ch')filtered=filtered.filter(([,u])=>u.channel>0);if(!filtered.length){$('aUserList').innerHTML='<div class="a-empty">Tidak ada pengguna online</div>';return;}filtered.sort(([,a],[,b])=>(b.channel-a.channel)||(a.name.localeCompare(b.name)));$('aUserList').innerHTML=filtered.map(([pid,u])=>{const since=Math.round((Date.now()-u.lastSeen)/1000)+'s lalu';const chInfo=u.channel>0?'📡 CH '+u.channel+' · '+u.mode.toUpperCase():'⏳ Belum pilih channel';const emailRow=u.email?`<div class="a-uemail">✉ ${aEsc(u.email)}</div>`:'';const nm=aEsc(u.name);const muteBtn=u.muted?`<button class="a-ubtn a-uon" data-a="unmute" data-pid="${pid}" data-nm="${nm}" ontouchend="aBtnTouch(event)" onclick="aBtnTouch(event)">🔊 ON</button>`:`<button class="a-ubtn a-uoff" data-a="mute" data-pid="${pid}" data-nm="${nm}" ontouchend="aBtnTouch(event)" onclick="aBtnTouch(event)">🔇 OFF</button>`;const muteBar=u.muted?'<div style="font-size:9px;color:#ff4444;letter-spacing:1px;margin-top:2px;">🔇 MIKROFON DIKUNCI</div>':'';return`<div class="a-ucard${u.muted?' a-ucard-muted':''}"><div class="a-uav" style="${u.muted?'border-color:#663333;color:#cc4444;':''}">${u.name.charAt(0)}</div><div class="a-uinfo"><div class="a-uname">${nm}</div><div class="a-umeta">${chInfo}</div>${emailRow}${muteBar}<div class="a-uid">ID: ${pid} · ${since}</div></div><div class="a-uact">${muteBtn}<button class="a-ubtn a-ukick" data-a="kick" data-pid="${pid}" data-nm="${nm}" ontouchend="aBtnTouch(event)" onclick="aBtnTouch(event)">⚡ KICK</button><button class="a-ubtn a-uban" data-a="ban" data-pid="${pid}" data-nm="${nm}" ontouchend="aBtnTouch(event)" onclick="aBtnTouch(event)">🚫 BAN</button></div></div>`;}).join('');}
+function aRenderPending(){const entries=Object.values(aPending);$('aPendingList').innerHTML=entries.length?entries.map(u=>`<div class="a-pendcard"><div class="a-pend-av">${u.name.charAt(0)}</div><div class="a-pend-info"><div class="a-pend-name">${aEsc(u.name)}</div><div class="a-pend-email">✉ ${aEsc(u.email)}</div><div class="a-pend-id">ID: ${u.pid}</div></div><div class="a-pend-act"><button class="a-acc-btn" data-a="acc" data-pid="${u.pid}" data-nm="${aEsc(u.name)}" ontouchend="aBtnTouch(event)" onclick="aBtnTouch(event)">✅ ACC</button><button class="a-tolak-btn" data-a="tolak" data-pid="${u.pid}" data-nm="${aEsc(u.name)}" ontouchend="aBtnTouch(event)" onclick="aBtnTouch(event)">❌ TOLAK</button></div></div>`).join(''):'<div class="a-empty">Tidak ada permintaan masuk</div>';}
 function aRenderApproved(){$('aApvCnt').textContent=aApproved.length;$('aApvList').innerHTML=aApproved.length?aApproved.map(u=>{
   // Cek apakah user sedang online di aUsers (cocokkan pid atau nama)
   const onlineEntry=Object.entries(aUsers).find(([p,uu])=>p===u.pid||(u.email&&uu.email===u.email)||uu.name===u.name);
@@ -1180,28 +1252,29 @@ function aRenderApproved(){$('aApvCnt').textContent=aApproved.length;$('aApvList
       ?'<div class="a-apv-status standby">💤 STANDBY</div>'
       :'<div class="a-apv-status online">● ONLINE · CH '+onlineData.channel+'</div>')
     :'<div class="a-apv-status offline">○ OFFLINE</div>';
+  const nm=aEsc(u.name);
   const muteBtn=onlineData
     ?(isMuted
-      ?`<button class="a-apv-on-btn" onclick="adm_unmute('${onlinePid}','${aEsc(u.name)}')">🔊 ON</button>`
-      :`<button class="a-apv-off-btn" onclick="adm_mute('${onlinePid}','${aEsc(u.name)}')">🔇 OFF</button>`)
+      ?`<button class="a-apv-on-btn" data-a="unmute" data-pid="${onlinePid}" data-nm="${nm}" ontouchend="aBtnTouch(event)" onclick="aBtnTouch(event)">🔊 ON</button>`
+      :`<button class="a-apv-off-btn" data-a="mute" data-pid="${onlinePid}" data-nm="${nm}" ontouchend="aBtnTouch(event)" onclick="aBtnTouch(event)">🔇 OFF</button>`)
     :'<button style="height:28px;border-radius:6px;font-size:9px;font-weight:bold;font-family:Courier New,monospace;padding:0 9px;background:#0a0a0a;border:1px solid #222;color:#333;cursor:not-allowed;" disabled>🔇 OFF</button>';
-  const kickBtn=onlineData?`<button class="a-apv-off-btn" onclick="adm_promptKick('${onlinePid}','${aEsc(u.name)}')">⚡ PUTUS</button>`:'';
+  const kickBtn=onlineData?`<button class="a-apv-off-btn" data-a="kick" data-pid="${onlinePid}" data-nm="${nm}" ontouchend="aBtnTouch(event)" onclick="aBtnTouch(event)">⚡ PUTUS</button>`:'';
   return`<div class="a-apvcard">
     <div class="a-apvcard-top">
       <div class="a-apv-av${isMuted?' muted':''}">${u.name.charAt(0)}</div>
       <div class="a-apv-info">
-        <div class="a-apv-name">${aEsc(u.name)}</div>
+        <div class="a-apv-name">${nm}</div>
         <div class="a-apv-meta">✉ ${aEsc(u.email||'-')} · ${u.accAt||''}</div>
         ${statusHtml}
       </div>
     </div>
     <div class="a-apvcard-btns">
       ${muteBtn}${kickBtn}
-      <button class="a-apv-ban-btn" onclick="adm_banApproved('${onlinePid}','${aEsc(u.name)}')">🚫 BLOKIR</button>
-      <button class="a-cabut-btn" onclick="adm_revokeAcc('${u.pid}')">↩ CABUT ACC</button>
+      <button class="a-apv-ban-btn" data-a="banApv" data-pid="${onlinePid}" data-nm="${nm}" ontouchend="aBtnTouch(event)" onclick="aBtnTouch(event)">🚫 BLOKIR</button>
+      <button class="a-cabut-btn" data-a="cabut" data-pid="${u.pid}" data-nm="${nm}" ontouchend="aBtnTouch(event)" onclick="aBtnTouch(event)">↩ CABUT ACC</button>
     </div>
   </div>`;}).join(''):'<div class="a-empty">Belum ada yang di-ACC</div>';}
-function aRenderBans(){$('aBanCnt').textContent=aBans.length;if(!aBans.length){$('aBanList').innerHTML='<div class="a-empty">Belum ada yang diblokir</div>';return;}$('aBanList').innerHTML=aBans.map(b=>`<div class="a-bancard"><div style="flex:1"><div class="a-banname">🚫 ${aEsc(b.name)}</div><div class="a-banmeta">ID: ${b.pid} · ${b.bannedAt}</div></div><button class="a-ubtn a-uunban" onclick="adm_unban('${b.pid}')">↩ UNBAN</button></div>`).join('');}
+function aRenderBans(){$('aBanCnt').textContent=aBans.length;if(!aBans.length){$('aBanList').innerHTML='<div class="a-empty">Belum ada yang diblokir</div>';return;}$('aBanList').innerHTML=aBans.map(b=>`<div class="a-bancard"><div style="flex:1"><div class="a-banname">🚫 ${aEsc(b.name)}</div><div class="a-banmeta">ID: ${b.pid} · ${b.bannedAt}</div></div><button class="a-ubtn a-uunban" data-a="unban" data-pid="${b.pid}" data-nm="${aEsc(b.name)}" ontouchend="aBtnTouch(event)" onclick="aBtnTouch(event)">↩ UNBAN</button></div>`).join('');}
 
 // ══ FILTER ══
 window.adm_filter=function(f){aFilter=f;$('aFAll').style.background=f==='all'?'#071e00':'#0a0a0a';$('aFAll').style.color=f==='all'?'#88cc44':'#444';$('aFCh').style.background=f==='ch'?'#071e00':'#0a0a0a';$('aFCh').style.color=f==='ch'?'#88cc44':'#444';aRenderUsers();};
@@ -1249,28 +1322,74 @@ function aClearNotifBadge(){
   else if(badge)badge.textContent=Object.keys(aPending).length;
 }
 
-// ══ SUARA PRAMUGARI (ding-dong 2 nada) ══
-function aDing(){
+// ══ SUARA PRAMUGARI — di-generate sekali saat load, putar pakai data URI ══
+// Tidak butuh AudioContext, tidak butuh blob URL — paling kompatibel di Android WebView
+const _dingURI=(function(){
   try{
-    const ctx=new(window.AudioContext||window.webkitAudioContext)();
-    function note(freq,startT,dur,vol){
-      const o=ctx.createOscillator(),g=ctx.createGain(),f=ctx.createBiquadFilter();
-      f.type='lowpass';f.frequency.value=3500;
-      o.type='sine';o.frequency.value=freq;
-      o.connect(f);f.connect(g);g.connect(ctx.destination);
-      g.gain.setValueAtTime(0,ctx.currentTime+startT);
-      g.gain.linearRampToValueAtTime(vol||0.4,ctx.currentTime+startT+0.02);
-      g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+startT+dur);
-      o.start(ctx.currentTime+startT);
-      o.stop(ctx.currentTime+startT+dur+0.05);
+    const SR=22050,dur=1.8,n=Math.floor(SR*dur);
+    const f=new Float32Array(n);
+    for(let i=0;i<n;i++){
+      const t=i/SR;let s=0;
+      if(t<1.4){const e=Math.min(t/.015,1)*Math.exp(-t*2.5);s+=0.4*e*Math.sin(2*Math.PI*523.25*t);}
+      if(t>=0.4&&t<1.5){const dt=t-.4,e=Math.min(dt/.015,1)*Math.exp(-dt*2.5);s+=0.3*e*Math.sin(2*Math.PI*392*t);}
+      f[i]=s>1?1:s<-1?-1:s;
     }
-    // Ding-dong khas maskapai: C5 lalu G4
-    note(523.25, 0,   1.4, 0.4); // DING — C5
-    note(392.00, 0.4, 1.1, 0.3); // DONG — G4
-    setTimeout(()=>ctx.close(),3000);
+    const ab=new ArrayBuffer(44+n*2),v=new DataView(ab);
+    const ws=(o,s)=>{for(let i=0;i<s.length;i++)v.setUint8(o+i,s.charCodeAt(i));};
+    const wi=(o,val,l)=>{for(let i=0;i<l;i++)v.setUint8(o+i,(val>>(8*i))&255);};
+    ws(0,'RIFF');wi(4,36+n*2,4);ws(8,'WAVE');ws(12,'fmt ');
+    wi(16,16,4);wi(20,1,2);wi(22,1,2);wi(24,SR,4);wi(28,SR*2,4);wi(32,2,2);wi(34,16,2);
+    ws(36,'data');wi(40,n*2,4);
+    const pcm=new Int16Array(ab,44);
+    for(let i=0;i<n;i++)pcm[i]=f[i]*32767|0;
+    // Konversi ke base64 data URI (chunked agar tidak stack overflow)
+    const bytes=new Uint8Array(ab);
+    let b64='';
+    for(let i=0;i<bytes.length;i+=4096){
+      b64+=btoa(Array.from(bytes.subarray(i,Math.min(i+4096,bytes.length)),c=>String.fromCharCode(c)).join(''));
+    }
+    return 'data:audio/wav;base64,'+b64;
+  }catch(e){return null;}
+})();
+// ══ SUARA PRAMUGARI — TOGGLE ON/OFF ══
+let _prmOn = true;
+try { _prmOn = localStorage.getItem('ht_prm_sound') !== 'off'; } catch(e) {}
+function prmToggleChange() {
+  const chk = document.getElementById('prmChk');
+  _prmOn = chk ? chk.checked : true;
+  try { localStorage.setItem('ht_prm_sound', _prmOn ? 'on' : 'off'); } catch(e) {}
+}
+// Terapkan state tersimpan saat halaman dimuat
+(function(){
+  const chk = document.getElementById('prmChk');
+  if (chk) chk.checked = _prmOn;
+})();
+
+function aDing(){
+  if(!_prmOn) return;   // ← cek toggle
+  if(!_dingURI)return;
+  try{
+    const a=new Audio(_dingURI);
+    a.volume=0.85;
+    a.play().catch(()=>{});
   }catch(e){}
 }
+window.aDing = aDing;
 
+// Helper tombol admin — reliable di Android WebView (data-* + ontouchend+onclick)
+window.aBtnTouch=function(e){
+  e.preventDefault();e.stopPropagation();
+  const b=e.currentTarget,a=b.dataset.a,p=b.dataset.pid,n=b.dataset.nm||'';
+  if(a==='mute')adm_mute(p,n);
+  else if(a==='unmute')adm_unmute(p,n);
+  else if(a==='kick')adm_promptKick(p,n);
+  else if(a==='ban')adm_promptBan(p,n);
+  else if(a==='banApv')adm_banApproved(p,n);
+  else if(a==='cabut')adm_revokeAcc(p);
+  else if(a==='acc')adm_approve(p);
+  else if(a==='tolak')adm_reject(p);
+  else if(a==='unban')adm_unban(p);
+};
 function aToast(msg,type=''){const el=$('admToast');el.textContent=msg;el.className='show'+(type?' '+type:'');if(aToastT)clearTimeout(aToastT);aToastT=setTimeout(()=>{el.className='';},3000);}
 
 // ══ UTILS ══
